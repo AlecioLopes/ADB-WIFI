@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # =============================================
-# TERMUX INSTALLER SCRIPT (AUTO-PERMISSÃO + LOGS)
+# TERMUX INSTALLER SCRIPT (VERSÃO CORRIGIDA)
 # =============================================
 
-# --- Auto-permissão (não precisa rodar chmod +x) ---
+# --- Auto-permissão CORRIGIDA ---
 if [[ ! -x "$0" ]]; then
     echo -e "\033[1;36m[SETUP] Garantindo permissões de execução...\033[0m"
-    chmod +x "$0"
-    exec "$0"
-    exit 1
+    chmod +x "$0"  # Corrigido: usa $0 em vez de 'bash'
+    exec "./$0"    # Corrigido: usa caminho relativo
+    exit
 fi
 
 # --- Cores para melhor visualização ---
@@ -90,7 +90,7 @@ fi
 header "CONFIGURANDO PERMISSÕES"
 info "Habilitando allow-external-apps..."
 
-TERMUX_CONFIG="/data/data/com.termux/files/home/.termux/termux.properties"
+TERMUX_CONFIG="$HOME/.termux/termux.properties"
 CONFIG_KEY="allow-external-apps"
 CONFIG_VALUE="true"
 
