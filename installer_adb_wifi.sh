@@ -1,15 +1,25 @@
 #!/bin/bash
 
 # =============================================
-# TERMUX INSTALLER SCRIPT (VERSÃO CORRIGIDA)
+# TERMUX INSTALLER SCRIPT (VERSÃO 2.0 CORRIGIDA)
 # =============================================
 
-# --- Auto-permissão CORRIGIDA ---
-if [[ ! -x "$0" ]]; then
-    echo -e "\033[1;36m[SETUP] Garantindo permissões de execução...\033[0m"
-    chmod +x "$0"  # Corrigido: usa $0 em vez de 'bash'
-    exec "./$0"    # Corrigido: usa caminho relativo
-    exit
+# --- Auto-permissão UNIVERSAL (corrige erro do curl + chmod) ---
+if [[ ! -x "$0" || "$0" == "bash" ]]; then
+    echo -e "\033[1;36m[SETUP] Configurando permissões automaticamente...\033[0m"
+    TMP_SCRIPT="/tmp/termux_installer_$(date +%s).sh"
+    
+    # Se executado via curl, salva localmente
+    if [[ "$0" == "bash" ]]; then
+        curl -fsSL https://raw.githubusercontent.com/AlecioLopes/ADB-WIFI/main/installer_adb_wifi.sh > "$TMP_SCRIPT"
+        chmod +x "$TMP_SCRIPT"
+        exec "$TMP_SCRIPT"
+        exit
+    else
+        chmod +x "$0"
+        exec "./$0"
+        exit
+    fi
 fi
 
 # --- Cores para melhor visualização ---
@@ -114,7 +124,7 @@ fi
 
 # Finalização
 header "INSTALAÇÃO COMPLETA"
-success "Todos os componentes foram instalados!"
-info "Log completo: $LOG_FILE"
-info "Recomendado reiniciar o Termux para aplicar todas as configurações."
-echo -e "${GREEN}\n✔ Script concluído com sucesso!${NC}"
+success "✓ Tudo configurado com sucesso!"
+info "▶ Log completo em: $LOG_FILE"
+info "🔄 Reinicie o Termux para aplicar todas as configurações"
+echo -e "${GREEN}\n✔ Processo concluído!${NC}"
